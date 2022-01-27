@@ -1,33 +1,39 @@
-import React, { Component } from "react";
+import { useState, useEffect } from "react";
 import { FormHeader, FormInput, FormButton } from "./Form.styled";
 
-class Form extends Component {
-  state = {
-    name: "",
-    number: "",
+export default function Form({onSubmit }) {
+  const [name, setName] = useState("");
+  const [number, setNumber] = useState("");
+
+
+  const handleChange = (e) => {
+    switch (e.target.name) {
+      case "name":
+        setName(e.target.value);
+        break;
+      case "number":
+        setNumber(e.target.value);
+        break;
+      default:
+        return;
+    }
   };
 
-  handleChange = (e) => {
-    const { name, value } = e.currentTarget;
-
-    this.setState({ [name]: value });
-  };
-
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    this.props.onSubmit(this.state);
+    onSubmit({name, number});
 
-    this.reset();
+    reset();
   };
 
-  reset = () => {
-    this.setState({ name: "", number: "" });
+  const reset = () => {
+    setName("");
+    setNumber("");
   };
 
-  render() {
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <FormHeader>
           Имя
           <FormInput
@@ -36,8 +42,8 @@ class Form extends Component {
             pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
             title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
             required
-            value={this.state.name}
-            onChange={this.handleChange}
+            value={name}
+            onChange={handleChange}
           />
         </FormHeader>
         <FormHeader>
@@ -48,14 +54,11 @@ class Form extends Component {
             pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
             title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
             required
-            value={this.state.number}
-            onChange={this.handleChange}
+            value={number}
+            onChange={handleChange}
           />
         </FormHeader>
         <FormButton type="submit">Отправить</FormButton>
       </form>
     );
-  }
 }
-
-export default Form;
